@@ -12,6 +12,7 @@ PROGRAM{
   DECLPROC $DeployOk$_store
   DECLPROC $DeployOk$_store_cell
   DECLPROC $Add$_load
+  DECLPROC $Minus$_load
   DECLPROC $SampleTactContract$_store
   DECLPROC $SampleTactContract$_load
   DECLPROC $StateInit$_not_null
@@ -21,16 +22,21 @@ PROGRAM{
   DECLPROC $SampleTactContract$_contract_store
   DECLPROC $global_send
   DECLPROC $SampleTactContract$_fun_add
+  DECLPROC $SampleTactContract$_fun_minus
   DECLPROC $SampleTactContract$_fun_counter
+  DECLPROC $SampleTactContract$_fun_getter
   DECLPROC $SendParameters$_constructor_bounce_to_value_mode_body_code_data
   DECLPROC $SampleTactContract$_fun_forward
   DECLPROC $SampleTactContract$_fun_reply
   DECLPROC $SampleTactContract$_fun_notify
   DECLPROC $DeployOk$_constructor_queryId
   DECLPROC $SampleTactContract$_internal_binary_Add
+  DECLPROC $SampleTactContract$_internal_binary_Minus
   DECLPROC $SampleTactContract$_internal_text_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae
+  DECLPROC $SampleTactContract$_internal_text_85915b1bf5943fd2853bb660338acacfae39d1f735549cef922255a9945acc3e
   DECLPROC $SampleTactContract$_internal_binary_Deploy
   104984 DECLMETHOD %counter
+  101268 DECLMETHOD %getter
   113617 DECLMETHOD supported_interfaces
   121275 DECLMETHOD get_abi_ipfs
   115390 DECLMETHOD lazy_deployment_completed
@@ -113,6 +119,15 @@ PROGRAM{
     32 LDU
     SWAP
     2278832834 PUSHINT
+    EQUAL
+    129 THROWIFNOT
+    32 LDU
+    SWAP
+  }>
+  $Minus$_load PROCINLINE:<{
+    32 LDU
+    SWAP
+    2759561417 PUSHINT
     EQUAL
     129 THROWIFNOT
     32 LDU
@@ -289,7 +304,21 @@ PROGRAM{
     THROWANYIFNOT
     ADD
   }>
+  $SampleTactContract$_fun_minus PROCREF:<{
+    __tact_context_get INLINECALLDICT
+    s2 s3 XCHG
+    3 BLKDROP
+    s3 PUSH
+    4429 PUSHINT
+    s0 s2 XCHG
+    __tact_slice_eq_bits INLINECALLDICT
+    THROWANYIFNOT
+    SUB
+  }>
   $SampleTactContract$_fun_counter PROCREF:<{
+    DUP
+  }>
+  $SampleTactContract$_fun_getter PROCREF:<{
     DUP
   }>
   $SendParameters$_constructor_bounce_to_value_mode_body_code_data PROCINLINE:<{
@@ -335,10 +364,19 @@ PROGRAM{
   $SampleTactContract$_internal_binary_Add PROCINLINE:<{
     $SampleTactContract$_fun_add INLINECALLDICT
   }>
+  $SampleTactContract$_internal_binary_Minus PROCINLINE:<{
+    $SampleTactContract$_fun_minus INLINECALLDICT
+  }>
   $SampleTactContract$_internal_text_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae PROCINLINE:<{
     1 PUSHINT
     $SampleTactContract$_fun_add INLINECALLDICT
     B{b5ee9c7241010101001100001e00000000696e6372656d656e7465648430bf20} B>boc PUSHREF
+    $SampleTactContract$_fun_reply INLINECALLDICT
+  }>
+  $SampleTactContract$_internal_text_85915b1bf5943fd2853bb660338acacfae39d1f735549cef922255a9945acc3e PROCINLINE:<{
+    1 PUSHINT
+    $SampleTactContract$_fun_minus INLINECALLDICT
+    B{b5ee9c7241010101001100001e0000000064656372656d656e7465647f812353} B>boc PUSHREF
     $SampleTactContract$_fun_reply INLINECALLDICT
   }>
   $SampleTactContract$_internal_binary_Deploy PROCINLINE:<{
@@ -351,6 +389,11 @@ PROGRAM{
     $SampleTactContract$_fun_counter INLINECALLDICT
     2 1 BLKDROP2
   }>
+  %getter PROC:<{
+    $SampleTactContract$_contract_load INLINECALLDICT
+    $SampleTactContract$_fun_getter INLINECALLDICT
+    2 1 BLKDROP2
+  }>
   supported_interfaces PROC:<{
     123515602279859691144772641439386770278 PUSHINT
     209801025412363888721030803524359905849 PUSHINT
@@ -358,7 +401,7 @@ PROGRAM{
     209474421377847335869795010607481022628 PUSHINT
   }>
   get_abi_ipfs PROC:<{
-    x{697066733a2f2f516d597a51484e326e3644317a4542754a79426e4a726e6d6851577a675a5768614e70706d7773414657346b4e69} PUSHSLICE
+    x{697066733a2f2f516d616167716e537a6d787779597353326a4370323253783570386a336d4c326b6b394e6764793975705233457a} PUSHSLICE
   }>
   lazy_deployment_completed PROC:<{
     c4 PUSH
@@ -394,6 +437,16 @@ PROGRAM{
       TRUE
     }>
     DUP
+    2759561417 PUSHINT
+    EQUAL
+    IFJMP:<{
+      DROP
+      $Minus$_load INLINECALLDICT
+      NIP
+      $SampleTactContract$_internal_binary_Minus INLINECALLDICT
+      TRUE
+    }>
+    DUP
     2490013878 PUSHINT
     EQUAL
     IFJMP:<{
@@ -406,10 +459,19 @@ PROGRAM{
     0 EQINT
     IF:<{
       HASHSU
+      DUP
       89092981215441470209245890604563109773385607357076622359718516871332286001838 PUSHINT
       EQUAL
       IFJMP:<{
+        DROP
         $SampleTactContract$_internal_text_c4f8d72312edfdef5b7bec7833bdbb162d1511bd78a912aed0f2637af65572ae INLINECALLDICT
+        TRUE
+        RETALT
+      }>
+      60414430498665911021786040396987709422365243451461403364463093175528667663422 PUSHINT
+      EQUAL
+      IFJMP:<{
+        $SampleTactContract$_internal_text_85915b1bf5943fd2853bb660338acacfae39d1f735549cef922255a9945acc3e INLINECALLDICT
         TRUE
         RETALT
       }>

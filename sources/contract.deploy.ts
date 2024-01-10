@@ -1,14 +1,14 @@
 import * as fs from "fs";
 import * as path from "path";
-import { Address, contractAddress } from "@ton/core";
-import { SampleTactContract } from "./output/sample_SampleTactContract";
-import { prepareTactDeployment } from "@tact-lang/deployer";
+import {Address, contractAddress} from "@ton/core";
+import {SampleTactContract} from "./output/sample_SampleTactContract";
+import {prepareTactDeployment} from "@tact-lang/deployer";
+import {_OWNER, _TEST_ONLY} from "./global.config";
 
 (async () => {
     // Parameters
-    let testnet = true;
     let packageName = "sample_SampleTactContract.pkg";
-    let owner = Address.parse("0QD8d5vx-7hiviuMMCU_xXHyg9PToCHgQB1MwcTkgG7dIbkt");
+    let owner = Address.parse(_OWNER);
     let init = await SampleTactContract.init(owner);
 
     // Load required data
@@ -16,16 +16,16 @@ import { prepareTactDeployment } from "@tact-lang/deployer";
     let data = init.data.toBoc();
     let pkg = fs.readFileSync(path.resolve(__dirname, "output", packageName));
 
-    // Prepareing
+    // Preparing
     console.log("Uploading package...");
-    let prepare = await prepareTactDeployment({ pkg, data, testnet });
+    let prepare = await prepareTactDeployment({pkg, data, testnet: _TEST_ONLY});
 
     // Deploying
     console.log("============================================================================================");
     console.log("Contract Address");
     console.log("============================================================================================");
     console.log();
-    console.log(address.toString({ testOnly: testnet }));
+    console.log(address.toString({testOnly: _TEST_ONLY}));
     console.log();
     console.log("============================================================================================");
     console.log("Please, follow deployment link");

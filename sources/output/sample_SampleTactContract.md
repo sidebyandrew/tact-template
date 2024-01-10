@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: SampleTactContract
-BOC Size: 849 bytes
+BOC Size: 1002 bytes
 
 # Types
-Total Types: 7
+Total Types: 8
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -33,10 +33,16 @@ Signature: `FactoryDeploy{queryId:uint64,cashback:address}`
 TLB: `add#87d43ac2 amount:uint32 = Add`
 Signature: `Add{amount:uint32}`
 
+## Minus
+TLB: `minus#a47b90c9 amount:uint32 = Minus`
+Signature: `Minus{amount:uint32}`
+
 # Get Methods
-Total Get Methods: 1
+Total Get Methods: 2
 
 ## counter
+
+## getter
 
 # Error Codes
 2: Stack undeflow

@@ -5,7 +5,8 @@
     "test": "jest",
     "deploy": "ts-node ./sources/contract.deploy.ts",
     "read": "ts-node ./sources/contract.read.ts",
-    "write": "ts-node ./sources/contract.write.ts"
+    "write": "ts-node ./sources/contract.write.ts",
+    "send_msg": "ts-node ./sources/contract.send.msg.ts"
   },
   "dependencies": {
     "@tact-lang/compiler": "^1.1.5",
