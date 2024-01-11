@@ -11,7 +11,7 @@ describe("contract", () => {
         let contract = system.open(await SampleTactContract.fromInit(owner.address));
         system.name(contract.address, "main");
         let track = system.track(contract);
-        await contract.send(owner, { value: toNano(1) }, { $$type: "Deploy", queryId: 0n });
+        await contract.send(owner, { value: toNano("0.01") }, { $$type: "Deploy", queryId: 0n });
         await system.run();
         expect(track.collect()).toMatchInlineSnapshot(`
             [
@@ -70,7 +70,7 @@ describe("contract", () => {
         expect(await contract.getCounter()).toEqual(0n);
 
         // Increment counter
-        await contract.send(owner, { value: toNano(1) }, "increment");
+        await contract.send(owner, { value: toNano("0.01") }, "increment");
         await system.run();
         expect(track.collect()).toMatchInlineSnapshot(`
             [
@@ -120,7 +120,7 @@ describe("contract", () => {
         expect(await contract.getCounter()).toEqual(1n);
 
         // Non-owner
-        await contract.send(nonOwner, { value: toNano(1) }, "increment");
+        await contract.send(nonOwner, { value: toNano("0.01") }, "increment");
         await system.run();
         expect(track.collect()).toMatchInlineSnapshot(`
             [

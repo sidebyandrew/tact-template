@@ -1,8 +1,11 @@
-import { Address, contractAddress, toNano } from "@ton/core";
-import { TonClient4, WalletContractV4 } from "@ton/ton";
+import {Address, contractAddress, toNano} from "@ton/core";
+import {TonClient4, WalletContractV4} from "@ton/ton";
 import {Add, Minus, SampleTactContract} from "./output/sample_SampleTactContract";
-import { mnemonicToPrivateKey } from "@ton/crypto";
-import {_ENDPOINT_MAINNET, _ENDPOINT_TESTNET, _OWNER, _SECRET_mnemonic, _TEST_ONLY} from "./global.config";
+import {mnemonicToPrivateKey} from "@ton/crypto";
+import {_ENDPOINT_MAINNET, _ENDPOINT_TESTNET, _OWNER, _TEST_ONLY, getKeypairFromFile} from "./global.config";
+import fs from "fs";
+
+
 
 const Sleep = (ms: number)=> {
     return new Promise(resolve=>setTimeout(resolve, ms))
@@ -14,13 +17,16 @@ const Sleep = (ms: number)=> {
     });
 
     // open wallet v4 (notice the correct wallet version here)
-    const mnemonic = _SECRET_mnemonic; // your 24 secret words (replace ... with the rest of the words)
-    const key = await mnemonicToPrivateKey(mnemonic.split(" "));
-    const wallet = WalletContractV4.create({ publicKey: key.publicKey, workchain: 0 });
+    let keyPair = await getKeypairFromFile('mnemonics.txt',_TEST_ONLY);
+    const wallet = WalletContractV4.create({ publicKey: keyPair.publicKey, workchain: 0 });
+    const address = wallet.address;
+    console.info("Wallet address (bounceable)" + address.toString({urlSafe:true, bounceable:false, testOnly:_TEST_ONLY}))
+    console.info("Wallet address (non-bounceable)" + address.toString({urlSafe:true, bounceable:true, testOnly:_TEST_ONLY}))
+    console.info("Wallet address (HEX) " + address.toRawString())
     
     // open wallet and read the current seqno of the wallet
     const walletContract = client.open(wallet);
-    const walletSender = walletContract.sender(key.secretKey);
+    const walletSender = walletContract.sender(keyPair.secretKey);
 
     // open the contract address
     let owner = Address.parse(_OWNER);
@@ -33,18 +39,18 @@ const Sleep = (ms: number)=> {
     // await contract_open.send(walletSender, { value: toNano(0.01)}, "increment");
 
     await Sleep(3000);
-    console.log(" First Counter Value : " + (await contract_open.getCounter()));
+    console.log("Counter Value Before : " + (await contract_open.getCounter()));
 
-    // contract_open.send(walletSender, {value: toNano("0.01")}, {
-    //     $$type: 'Add', amount: 2n
+    // contract_open.send(walletSender, {value: toNano("0.001")}, {
+    //     $$type: 'Add', amount: 200n
     // } as Add);
 
-    contract_open.send(walletSender, {value: toNano("0.01")}, {
-        $$type: 'Minus', amount: 1n
+    contract_open.send(walletSender, {value: toNano("0.002")}, {
+        $$type: 'Minus', amount: 2n
     } as Minus);
 
     console.log("Wait 20s to make sure get the result..... ");
     await Sleep(20000);
-    console.log("Second Counter Value After minus 2: " + (await contract_open.getGetter()));
+    console.log("Counter Value After Msg Call: " + (await contract_open.getGetter()));
 })();
 

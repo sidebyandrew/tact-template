@@ -1,0 +1,3 @@
+Create a file 'mnemonics.txt' to store mnemonic.
+
+This mnemonic file list in '.gitignore' thus will never be commit to Git.
