@@ -8,7 +8,7 @@ describe("contract", () => {
         let system = await ContractSystem.create();
         let owner = system.treasure("owner");
         let nonOwner = system.treasure("non-owner");
-        let contract = system.open(await SampleTactContract.fromInit(owner.address));
+        let contract = system.open(await SampleTactContract.fromInit(owner.address,100n));
         system.name(contract.address, "main");
         let track = system.track(contract);
         await contract.send(owner, { value: toNano("0.01") }, { $$type: "Deploy", queryId: 0n });

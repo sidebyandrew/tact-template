@@ -3,13 +3,13 @@ import * as path from "path";
 import {Address, contractAddress} from "@ton/core";
 import {SampleTactContract} from "./output/sample_SampleTactContract";
 import {prepareTactDeployment} from "@tact-lang/deployer";
-import {_OWNER, _TEST_ONLY} from "./global.config";
+import {_OWNER, _SEQ, _TEST_ONLY} from "./global.config";
 
 (async () => {
     // Parameters
     let packageName = "sample_SampleTactContract.pkg";
     let owner = Address.parse(_OWNER);
-    let init = await SampleTactContract.init(owner);
+    let init = await SampleTactContract.init(owner, _SEQ);
 
     // Load required data
     let address = contractAddress(0, init);

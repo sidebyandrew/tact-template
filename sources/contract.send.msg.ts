@@ -1,8 +1,8 @@
 import {Address, contractAddress, toNano} from "@ton/core";
 import {TonClient4, WalletContractV4} from "@ton/ton";
-import {Add, Minus, SampleTactContract} from "./output/sample_SampleTactContract";
+import {Add, Divide, Minus, Multiply, SampleTactContract} from "./output/sample_SampleTactContract";
 import {mnemonicToPrivateKey} from "@ton/crypto";
-import {_ENDPOINT_MAINNET, _ENDPOINT_TESTNET, _OWNER, _TEST_ONLY, getKeypairFromFile} from "./global.config";
+import {_ENDPOINT_MAINNET, _ENDPOINT_TESTNET, _OWNER, _SEQ, _TEST_ONLY, getKeypairFromFile} from "./global.config";
 import fs from "fs";
 
 
@@ -30,7 +30,7 @@ const Sleep = (ms: number)=> {
 
     // open the contract address
     let owner = Address.parse(_OWNER);
-    let init = await SampleTactContract.init(owner);
+    let init = await SampleTactContract.init(owner,_SEQ);
     let contract_address = contractAddress(0, init);
     let contract = await SampleTactContract.fromAddress(contract_address);
     let contract_open = await client.open(contract);
@@ -45,9 +45,17 @@ const Sleep = (ms: number)=> {
     //     $$type: 'Add', amount: 200n
     // } as Add);
 
-    contract_open.send(walletSender, {value: toNano("0.002")}, {
-        $$type: 'Minus', amount: 2n
-    } as Minus);
+    // contract_open.send(walletSender, {value: toNano("0.002")}, {
+    //     $$type: 'Minus', amount: 2n
+    // } as Minus);
+
+    // contract_open.send(walletSender, {value: toNano("0.1")}, {
+    //     $$type: 'Multiply', amount: 2n
+    // } as Multiply);
+
+    contract_open.send(walletSender, {value: toNano("0.1")}, {
+        $$type: 'Divide', amount: 3n
+    } as Divide);
 
     console.log("Wait 20s to make sure get the result..... ");
     await Sleep(20000);

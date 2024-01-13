@@ -9,6 +9,7 @@ export let _ENDPOINT_TESTNET = "https://sandbox-v4.tonhubapi.com";
 
 export let _OWNER = "UQBOop4AF9RNh2DG1N1yZfzFM28vZNUlRjAtjphOEVMd0j-8";
 
+export let _SEQ = 1n;
 
 export async function getKeypairFromFile(filePath:string, testOnly:boolean) {
     const fileContent = fs.readFileSync(filePath, 'utf8');

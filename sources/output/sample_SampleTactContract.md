@@ -1,9 +1,9 @@
 # TACT Compilation Report
 Contract: SampleTactContract
-BOC Size: 1002 bytes
+BOC Size: 1141 bytes
 
 # Types
-Total Types: 8
+Total Types: 10
 
 ## StateInit
 TLB: `_ code:^cell data:^cell = StateInit`
@@ -36,6 +36,14 @@ Signature: `Add{amount:uint32}`
 ## Minus
 TLB: `minus#a47b90c9 amount:uint32 = Minus`
 Signature: `Minus{amount:uint32}`
+
+## Multiply
+TLB: `multiply#82491bc4 amount:uint32 = Multiply`
+Signature: `Multiply{amount:uint32}`
+
+## Divide
+TLB: `divide#7ca4745f amount:uint32 = Divide`
+Signature: `Divide{amount:uint32}`
 
 # Get Methods
 Total Get Methods: 2
@@ -70,3 +78,4 @@ Total Get Methods: 2
 136: Invalid address
 137: Masterchain support is not enabled for this contract
 4429: Invalid sender
+62454: divide 0 is not allowed.

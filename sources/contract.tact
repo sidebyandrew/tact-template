@@ -9,15 +9,25 @@ message Minus {
     amount: Int as uint32;
 }
 
+message Multiply {
+    amount: Int as uint32;
+}
+
+message Divide {
+    amount: Int as uint32;
+}
+
 
 contract SampleTactContract with Deployable {
 
     owner: Address;
     counter: Int as uint32;
+    seqno: Int as uint64;
 
-    init(owner: Address) {
+    init(owner: Address, seq: Int) {
         self.owner = owner;
         self.counter = 0;
+        self.seqno=seq;
     }
 
     fun add(v: Int) {
@@ -38,6 +48,19 @@ contract SampleTactContract with Deployable {
          self.counter = (self.counter - v);
      }
 
+      fun multiply(v: Int) {
+          let ctx: Context = context();
+          require(ctx.sender == self.owner, "Invalid sender");
+          self.counter = (self.counter * v);
+      }
+
+     fun divide(v: Int) {
+        let ctx: Context = context();
+        require(ctx.sender == self.owner, "Invalid sender");
+        require(v != 0 , "divide 0 is not allowed.");
+        self.counter = (self.counter / v);
+     }
+
     receive(msg: Add) {
         self.add(msg.amount);
     }
@@ -45,6 +68,14 @@ contract SampleTactContract with Deployable {
     receive(msg: Minus) {
         self.minus(msg.amount);
     }
+
+     receive(msg: Multiply) {
+        self.multiply(msg.amount);
+     }
+
+     receive(msg: Divide) {
+        self.divide(msg.amount);
+     }
 
     receive("increment") {
         self.add(1);
